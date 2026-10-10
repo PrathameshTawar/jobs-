@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Apply & Profile Refresh Hub</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">SignalForge</span>
+          <span class="brand-subtitle">Job Auto-Apply Suite</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="dashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="runner">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span>Automation Terminal</span>
+          <span class="badge-pulse hidden" id="runningBadge">RUNNING</span>
+        </button>
+        <button class="nav-item" data-tab="applications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Applications Tracker</span>
+        </button>
+        <button class="nav-item" data-tab="targets">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          <span>Target Companies</span>
+        </button>
+        <button class="nav-item" data-tab="config">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Credentials & Config</span>
+        </button>
+        <button class="nav-item" data-tab="scheduler">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Task Scheduler</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-card">
+          <div class="status-header">
+            <span class="status-dot online"></span>
+            <span class="status-label">System Active</span>
+          </div>
+          <p class="status-sub" id="sidebarAccount">Email: Loading...</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar Header -->
+      <header class="topbar">
+        <div class="page-title-group">
+          <h1 id="pageTitle">Executive Dashboard</h1>
+          <p id="pageSubtitle" class="text-muted">Real-time automation analytics and control panel</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-outline" id="refreshDataBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            Sync Status
+          </button>
+          <button class="btn btn-primary" onclick="switchTab('runner')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Launch Automation
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: DASHBOARD -->
+      <section class="tab-page active" id="tab-dashboard">
+        <!-- KPI Cards Grid -->
+        <div class="kpi-grid">
+          <div class="kpi-card glass">
+            <div class="kpi-icon icon-purple">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="kpi-data">
+              <span class="kpi-label">Total Applications</span>
+              <h2 class="kpi-value" id="kpiTotalApps">0</h2>
+              <span class="kpi-sub positive" id="kpiDetailedCount">0 detailed JSON logs</span>
+            </div>
+          </div>
+
+          <div class="kpi-card glass">
+            <div class="kpi-icon icon-cyan">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div class="kpi-data">
+              <span class="kpi-label">Naukri Headline Refresh</span>
+              <h2 class="kpi-value" id="kpiRefreshStatus">Active</h2>
+              <span class="kpi-sub text-muted" id="kpiLastRefreshTime">Last: Fetching...</span>
+            </div>
+          </div>
+
+          <div class="kpi-card glass">
+            <div class="kpi-icon icon-emerald">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+            <div class="kpi-data">
+              <span class="kpi-label">Target Companies</span>
+              <h2 class="kpi-value" id="kpiTargetCompanies">0</h2>
+              <span class="kpi-sub text-muted">Curated pipeline list</span>
+            </div>
+          </div>
+
+          <div class="kpi-card glass">
+            <div class="kpi-icon icon-amber">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="kpi-data">
+              <span class="kpi-label">Windows Task Scheduler</span>
+              <h2 class="kpi-value" id="kpiSchedulerState">Checking...</h2>
+              <span class="kpi-sub text-muted" id="kpiSchedulerNext">Next run: N/A</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Automation Actions Bar -->
+        <div class="panel glass">
+          <div class="panel-header">
+            <h3>⚡ One-Click Automation Launchpad</h3>
+            <span class="text-muted">Trigger browser automation directly from your dashboard</span>
+          </div>
+          <div class="quick-launch-grid">
+            <button class="launch-btn" onclick="quickLaunch('naukri-profile-refresh.js', [], 'Naukri Profile Refresh')">
+              <div class="btn-icon">🔄</div>
+              <div class="btn-info">
+                <strong>Refresh Naukri Profile</strong>
+                <span>Toggles headline dot to boost recruiter visibility</span>
+              </div>
+            </button>
+
+            <button class="launch-btn" onclick="quickLaunch('naukri-auto-apply.js', ['--visible'], 'Naukri Auto Apply')">
+              <div class="btn-icon">💼</div>
+              <div class="btn-info">
+                <strong>Apply: Naukri</strong>
+                <span>Auto-searches and applies to relevant Naukri jobs</span>
+              </div>
+            </button>
+
+            <button class="launch-btn" onclick="quickLaunch('linkedin-auto-apply.js', ['--visible'], 'LinkedIn Auto Apply')">
+              <div class="btn-icon">🔗</div>
+              <div class="btn-info">
+                <strong>Apply: LinkedIn</strong>
+                <span>Easy Apply automation on LinkedIn</span>
+              </div>
+            </button>
+
+            <button class="launch-btn" onclick="quickLaunch('indeed-auto-apply.js', ['--visible'], 'Indeed Auto Apply')">
+              <div class="btn-icon">🎯</div>
+              <div class="btn-info">
+                <strong>Apply: Indeed</strong>
+                <span>Auto-applies to matching Indeed listings</span>
+              </div>
+            </button>
+
+            <button class="launch-btn" onclick="quickLaunch('wellfound-auto-apply.js', ['--live', '--visible'], 'Wellfound Auto Apply')">
+              <div class="btn-icon">🚀</div>
+              <div class="btn-info">
+                <strong>Apply: Wellfound (AngelList)</strong>
+                <span>Startup job applications automation</span>
+              </div>
+            </button>
+
+            <button class="launch-btn" onclick="quickLaunch('target-companies-apply.js', ['--visible'], 'Target Companies Apply')">
+              <div class="btn-icon">🏛️</div>
+              <div class="btn-info">
+                <strong>Target Companies Apply</strong>
+                <span>Applies strictly to your curated 130+ target list</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Platform Distribution & Recent Activity Split -->
+        <div class="two-col-grid">
+          <div class="panel glass">
+            <div class="panel-header">
+              <h3>📊 Platform Distribution</h3>
+            </div>
+            <div class="platform-chart-container">
+              <div class="chart-bars" id="platformBars">
+                <!-- Dynamically generated bars -->
+              </div>
+            </div>
+          </div>
+
+          <div class="panel glass">
+            <div class="panel-header">
+              <h3>🕒 Recent Applications</h3>
+              <button class="btn btn-sm btn-outline" onclick="switchTab('applications')">View All</button>
+            </div>
+            <div class="recent-apps-list" id="recentAppsList">
+              <div class="text-center p-4 text-muted">Loading applications...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: AUTOMATION RUNNER & LOG TERMINAL -->
+      <section class="tab-page" id="tab-runner">
+        <div class="panel glass">
+          <div class="panel-header">
+            <h3>🎮 Automation Control Hub</h3>
+            <span class="text-muted">Configure and execute Playwright automation scripts</span>
+          </div>
+          
+          <div class="runner-controls">
+            <div class="form-group">
+              <label>Select Script</label>
+              <select id="runnerScript" class="form-control">
+                <option value="naukri-profile-refresh.js">Naukri Profile Refresh (naukri-profile-refresh.js)</option>
+                <option value="naukri-auto-apply.js">Naukri Auto Apply (naukri-auto-apply.js)</option>
+                <option value="linkedin-auto-apply.js">LinkedIn Auto Apply (linkedin-auto-apply.js)</option>
+                <option value="indeed-auto-apply.js">Indeed Auto Apply (indeed-auto-apply.js)</option>
+                <option value="wellfound-auto-apply.js">Wellfound Auto Apply (wellfound-auto-apply.js)</option>
+                <option value="target-companies-apply.js">Target Companies Apply (target-companies-apply.js)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Execution Mode / Flags</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="flagVisible" checked>
+                  <span><code>--visible</code> (Show Browser Window)</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="flagLive">
+                  <span><code>--live</code> (Live Submission)</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="flagDryRun">
+                  <span><code>--dry-run</code> (Simulate Only)</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="flagLogin">
+                  <span><code>login</code> Mode (First time session setup)</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="runner-actions">
+              <button class="btn btn-primary btn-lg" id="runCustomTaskBtn" onclick="executeCustomTask()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Run Task Now
+              </button>
+              <button class="btn btn-danger btn-lg hidden" id="stopTaskBtn" onclick="stopRunningTask()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                Stop Execution
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time SSE Log Terminal -->
+        <div class="panel glass terminal-panel">
+          <div class="terminal-header">
+            <div class="terminal-title">
+              <span class="terminal-dot red"></span>
+              <span class="terminal-dot yellow"></span>
+              <span class="terminal-dot green"></span>
+              <span style="margin-left: 8px; font-weight: 600;">LIVE LOG STREAM & stdout</span>
+            </div>
+            <div class="terminal-controls">
+              <label class="checkbox-label text-sm" style="margin-right: 12px;">
+                <input type="checkbox" id="terminalAutoScroll" checked> Auto-scroll
+              </label>
+              <button class="btn btn-sm btn-outline" onclick="clearTerminal()">Clear Console</button>
+            </div>
+          </div>
+          <pre class="terminal-body" id="terminalBody"><code id="terminalCode">// Live automation stdout/stderr output will stream here in real time...
+// Ready to launch automation script.</code></pre>
+        </div>
+      </section>
+
+      <!-- TAB 3: APPLICATIONS TRACKER -->
+      <section class="tab-page" id="tab-applications">
+        <div class="panel glass">
+          <div class="panel-header">
+            <div>
+              <h3>📁 Application History Table</h3>
+              <span class="text-muted">Parsing <code>applications.csv</code> and detailed application logs</span>
+            </div>
+            <div class="table-actions">
+              <input type="text" id="appSearchInput" class="form-control" placeholder="Search role, company, skills..." oninput="filterApplications()">
+              <select id="appSiteFilter" class="form-control" onchange="filterApplications()">
+                <option value="ALL">All Platforms</option>
+                <option value="Naukri">Naukri</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Indeed">Indeed</option>
+                <option value="Wellfound">Wellfound</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Platform</th>
+                  <th>Role / Job Title</th>
+                  <th>Company</th>
+                  <th>Salary / Stipend</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="applicationsTableBody">
+                <tr><td colspan="6" class="text-center p-4">Loading applications data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-pagination">
+            <span id="tableInfoText" class="text-muted">Showing 0 of 0 entries</span>
+            <div class="pagination-btns">
+              <button class="btn btn-sm btn-outline" id="prevPageBtn" onclick="changeAppPage(-1)">Previous</button>
+              <span id="currentPageText" class="px-2">1</span>
+              <button class="btn btn-sm btn-outline" id="nextPageBtn" onclick="changeAppPage(1)">Next</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: TARGET COMPANIES -->
+      <section class="tab-page" id="tab-targets">
+        <div class="panel glass">
+          <div class="panel-header">
+            <div>
+              <h3>🎯 Target Companies Manager</h3>
+              <span class="text-muted">Priority company list configured in <code>target-companies.json</code></span>
+            </div>
+            <button class="btn btn-primary" onclick="saveTargetCompanies()">Save Changes</button>
+          </div>
+
+          <div class="target-add-bar">
+            <input type="text" id="newTargetInput" class="form-control" placeholder="Enter company name (e.g. Google, Microsoft, Adobe)..." onkeypress="if(event.key==='Enter') addTargetCompany()">
+            <button class="btn btn-secondary" onclick="addTargetCompany()">Add Company</button>
+            <input type="text" id="targetFilterInput" class="form-control" placeholder="Filter list..." oninput="renderTargetCompanies()" style="max-width: 200px; margin-left: auto;">
+          </div>
+
+          <div class="target-tags-container" id="targetCompaniesTags">
+            <!-- Dynamic tags -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: CREDENTIALS & CONFIG -->
+      <section class="tab-page" id="tab-config">
+        <div class="panel glass">
+          <div class="panel-header">
+            <div>
+              <h3>⚙️ Personal Profile & Environment Credentials</h3>
+              <span class="text-muted">Visual configuration editor for <code>.env</code> file</span>
+            </div>
+            <button class="btn btn-primary" onclick="saveEnvConfig()">Save .env Settings</button>
+          </div>
+
+          <form id="envForm" class="config-grid">
+            <div class="config-section-title">Personal Credentials & Accounts</div>
+            
+            <div class="form-group">
+              <label>Full Name (NAME)</label>
+              <input type="text" name="NAME" class="form-control" placeholder="e.g. Ankit Baghel">
+            </div>
+
+            <div class="form-group">
+              <label>Primary Email (EMAIL)</label>
+              <input type="email" name="EMAIL" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Phone Number (PHONE)</label>
+              <input type="text" name="PHONE" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Location (LOCATION)</label>
+              <input type="text" name="LOCATION" class="form-control">
+            </div>
+
+            <div class="config-section-title">Job Application Criteria</div>
+
+            <div class="form-group">
+              <label>Current Role (CURRENT_ROLE)</label>
+              <input type="text" name="CURRENT_ROLE" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Search Keywords (SEARCH_KEYWORDS)</label>
+              <input type="text" name="SEARCH_KEYWORDS" class="form-control" placeholder="full stack intern, software engineer">
+            </div>
+
+            <div class="form-group">
+              <label>Years of Experience (YEARS_EXPERIENCE)</label>
+              <input type="text" name="YEARS_EXPERIENCE" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Notice Period (NOTICE_PERIOD)</label>
+              <input type="text" name="NOTICE_PERIOD" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Current CTC LPA (CURRENT_CTC)</label>
+              <input type="text" name="CURRENT_CTC" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Expected CTC LPA (EXPECTED_CTC)</label>
+              <input type="text" name="EXPECTED_CTC" class="form-control">
+            </div>
+
+            <div class="config-section-title">Platform Accounts</div>
+
+            <div class="form-group">
+              <label>Google / Naukri Email (GOOGLE_EMAIL)</label>
+              <input type="text" name="GOOGLE_EMAIL" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Google / Naukri Password (GOOGLE_PASSWORD)</label>
+              <div class="password-input-wrap">
+                <input type="password" name="GOOGLE_PASSWORD" class="form-control" id="pwdGoogle">
+                <button type="button" class="pwd-toggle" onclick="togglePasswordVisibility('pwdGoogle')">👁️</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>LinkedIn Email (LINKEDIN_EMAIL)</label>
+              <input type="text" name="LINKEDIN_EMAIL" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>LinkedIn Password (LINKEDIN_PASSWORD)</label>
+              <div class="password-input-wrap">
+                <input type="password" name="LINKEDIN_PASSWORD" class="form-control" id="pwdLinkedin">
+                <button type="button" class="pwd-toggle" onclick="togglePasswordVisibility('pwdLinkedin')">👁️</button>
+              </div>
+            </div>
+
+            <div class="config-section-title">Portfolio & Links</div>
+
+            <div class="form-group">
+              <label>GitHub Profile URL (GITHUB_URL)</label>
+              <input type="text" name="GITHUB_URL" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>LinkedIn Profile URL (LINKEDIN_URL)</label>
+              <input type="text" name="LINKEDIN_URL" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Portfolio / Personal Website URL (PORTFOLIO_URL)</label>
+              <input type="text" name="PORTFOLIO_URL" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label>Gemini API Key (GEMINI_KEY)</label>
+              <input type="text" name="GEMINI_KEY" class="form-control" placeholder="AI answer generation key">
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB 6: TASK SCHEDULER & LOG INSPECTOR -->
+      <section class="tab-page" id="tab-scheduler">
+        <div class="two-col-grid">
+          <div class="panel glass">
+            <div class="panel-header">
+              <h3>🕒 Windows Task Scheduler Control</h3>
+            </div>
+            <div class="scheduler-info-card">
+              <div class="sched-status-row">
+                <span>Task Name:</span>
+                <strong>NaukriProfileRefresh</strong>
+              </div>
+              <div class="sched-status-row">
+                <span>Status:</span>
+                <span id="schedStatusVal" class="badge">Checking...</span>
+              </div>
+              <div class="sched-status-row">
+                <span>Last Run:</span>
+                <span id="schedLastRunVal">N/A</span>
+              </div>
+              <div class="sched-status-row">
+                <span>Next Run:</span>
+                <span id="schedNextRunVal">N/A</span>
+              </div>
+              <div class="sched-actions mt-4">
+                <button class="btn btn-success" onclick="triggerSchedulerAction('register')">Register Task (Hourly)</button>
+                <button class="btn btn-outline" onclick="triggerSchedulerAction('run-now')">Run Task Now</button>
+                <button class="btn btn-danger" onclick="triggerSchedulerAction('remove')">Remove Task</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel glass">
+            <div class="panel-header">
+              <h3>📜 System Log File Inspector</h3>
+              <select id="logFileSelect" class="form-control" onchange="fetchLogFileContent()">
+                <option value="refresh">naukri-refresh.log</option>
+                <option value="naukri-apply">naukri-auto-apply.log</option>
+                <option value="linkedin-apply">linkedin-auto-apply.log</option>
+              </select>
+            </div>
+            <pre class="log-file-viewer" id="logFileViewer">Loading log file contents...</pre>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
